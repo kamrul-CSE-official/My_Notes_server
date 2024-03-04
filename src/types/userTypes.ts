@@ -6,8 +6,3 @@ export interface IUser {
   password: string;
 }
 
-export interface IMessage {
-  senderId: string | undefined;
-  receiverId: string | undefined;
-  message: string;
-}
