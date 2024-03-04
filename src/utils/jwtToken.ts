@@ -50,43 +50,44 @@ const verifyRefreshToken = (
 const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
   const accessToken: string | undefined =
     req.headers?.authorization?.split(" ")[1];
-  if (!accessToken) {
-    return res
-      .status(403)
-      .json({ message: "Forbidden access", status: "fail" });
-  }
-
-  jwt.verify(
-    accessToken,
-    env.accessTokenSecret as string,
-    (err: any, decoded: any) => {
-      if (err) {
-        if (err.name === "TokenExpiredError") {
-          const expiredDecoded: any = jwt.decode(accessToken);
-          if (!expiredDecoded) {
-            return res.status(401).json({
-              message: "Invalid access token",
-              status: "fail",
-            });
-          }
-          const { name, img, _id } = expiredDecoded;
-          const newAccessToken = createAccessToken({ name, img, _id });
-          return res.status(401).json({
-            message: "Access token expired",
-            status: "fail",
-            accessToken: `Bearer ${newAccessToken}`,
-          });
-        } else {
-          return res
-            .status(403)
-            .json({ message: "Forbidden access", status: "fail" });
-        }
-      } else {
-        (req as any).accessTokenData = decoded;
-        next();
-      }
+    if (!accessToken) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden access", status: "fail" });
     }
-  );
+
+    jwt.verify(
+      accessToken,
+      env.accessTokenSecret as string,
+      (err: any, decoded: any) => {
+        if (err) {
+          console.log("Error aaa", err.name);
+          if (err.name === "TokenExpiredError") {
+            const expiredDecoded: any = jwt.decode(accessToken);
+            if (!expiredDecoded) {
+              return res.status(401).json({
+                message: "Invalid access token",
+                status: "fail",
+              });
+            }
+            const { name, img, _id } = expiredDecoded;
+            const newAccessToken = createAccessToken({ name, img, _id });
+            return res.status(401).json({
+              message: "Access token expired",
+              status: "fail",
+              accessToken: `Bearer ${newAccessToken}`,
+            });
+          } else {
+            return res
+              .status(403)
+              .json({ message: "Forbidden access", status: "fail" });
+          }
+        } else {
+          (req as any).accessTokenData = decoded;
+          next();
+        }
+      }
+    );
 };
 
 

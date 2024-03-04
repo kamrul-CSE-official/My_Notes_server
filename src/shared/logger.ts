@@ -14,7 +14,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 // Common options for both loggers
 const commonOptions = {
   format: combine(
-    label({ label: "real chat" }),
+    label({ label: "my-note" }),
     timestamp(),
     myFormat,
     prettyPrint()

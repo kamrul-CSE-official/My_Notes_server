@@ -3,8 +3,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
+import { protectRoute } from "./app/middlewares/protectRoute";
 
 import authRouters from "./app/routers/auth.routers";
+import notesRouters from "./app/routers/notes.routes";
 
 const app = express();
 
@@ -28,13 +30,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/v1", (req, res) => {
-  res.send("Real chat💬");
+  res.send("My Note📒");
 });
 
 app.use("/api/v1/auth", limiter, authRouters);
+app.use("/api/v1/notes", protectRoute, notesRouters);
 
 // error hendler
-
 app.use((req: Request, res: Response, next: NextFunction) => {
   next("Requested URL was not found!");
 });

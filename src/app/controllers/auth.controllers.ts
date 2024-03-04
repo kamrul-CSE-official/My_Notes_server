@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
 import { createAccessToken, createRefreshToken } from "../../utils/jwtToken";
-import { authServices } from "../services/auth.service";
+import { authServices } from "../services/auth.services";
 import { logger } from "../../shared/logger";
 
 const registerController = async (req: Request, res: Response) => {
@@ -44,7 +44,6 @@ const loginController = async (req: Request, res: Response) => {
         .status(401)
         .json({ status: "error", message: "Invalid password" });
     }
-
     logger.info(`${existUser.email} login successfull`);
 
     const payload = {

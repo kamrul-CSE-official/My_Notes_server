@@ -37,8 +37,8 @@ userSchema.pre("save", async function (next) {
 userSchema.statics.isUserExist = async function (
   this: any,
   email: string
-): Promise<Pick<IUserDocument, "name" | "img" | "password"> | null> {
-  return this.findOne({ email: email }).select("name img password");
+): Promise<Pick<IUserDocument, "name" | "img" | "password" | "email"> | null> {
+  return this.findOne({ email: email }).select("name img password email");
 };
 
 // Static method to compare passwords
