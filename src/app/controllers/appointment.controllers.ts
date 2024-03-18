@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import appointmentServices from "../services/appointment.services";
 
-export const takeAnAppointment = async (
+const takeAnAppointment = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -21,10 +21,7 @@ export const takeAnAppointment = async (
   }
 };
 
-export const getAppointments = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+const getAppointments = async (req: Request, res: Response): Promise<void> => {
   try {
     const appointments = await appointmentServices.getAllAppointments();
     res.status(200).json({
@@ -41,7 +38,7 @@ export const getAppointments = async (
   }
 };
 
-export const getAppointmentById = async (
+const getAppointmentById = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -70,7 +67,7 @@ export const getAppointmentById = async (
   }
 };
 
-export const updateAppointment = async (
+const updateAppointment = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -100,7 +97,7 @@ export const updateAppointment = async (
   }
 };
 
-export const deleteAppointment = async (
+const deleteAppointment = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -128,3 +125,12 @@ export const deleteAppointment = async (
     });
   }
 };
+
+const appointmentController = {
+  takeAnAppointment,
+  getAppointments,
+  getAppointmentById,
+  updateAppointment,
+  deleteAppointment,
+};
+export default appointmentController;

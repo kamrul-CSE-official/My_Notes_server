@@ -1,15 +1,9 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import appointmentController from "../controllers/appointment.controllers";
 import { protectRoute } from "../middlewares/protectRoute";
+import asyncHandler from "../middlewares/asyncHandler";
 
 const router = express.Router();
-
-// Async error handler middleware
-const asyncHandler = (fn: Function) => {
-  return (req: Request, res: Response, next: Function) => {
-    Promise.resolve(fn(req, res, next)).catch((err: Error) => next(err));
-  };
-};
 
 // Protect routes
 router.use(protectRoute);
