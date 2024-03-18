@@ -3,10 +3,9 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
-import { protectRoute } from "./app/middlewares/protectRoute";
 
 import authRouters from "./app/routers/auth.routers";
-import notesRouters from "./app/routers/notes.routes";
+import appiontmentRouters from "./app/routers/appointment.routers";
 
 const app = express();
 
@@ -30,11 +29,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/v1", (req, res) => {
-  res.send("My Note📒");
+  res.send("Ukil Saheb ⚖️");
 });
 
 app.use("/api/v1/auth", limiter, authRouters);
-app.use("/api/v1/notes", protectRoute, notesRouters);
+app.use("/api/v1/appointments", appiontmentRouters);
 
 // error hendler
 app.use((req: Request, res: Response, next: NextFunction) => {

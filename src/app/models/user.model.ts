@@ -7,7 +7,7 @@ import { IUser } from "../../types/userTypes";
 export interface IUserDocument extends IUser, Document {}
 
 // Interface for User model
-interface IUserModel extends Model<IUserDocument> {
+export interface IUserModel extends Model<IUserDocument> {
   isUserExist(email: string): Promise<IUserDocument | null>;
   isPasswordMatched(
     givenPassword: string,
@@ -15,6 +15,7 @@ interface IUserModel extends Model<IUserDocument> {
   ): Promise<boolean>;
 }
 
+// Define User Schema
 const userSchema = new Schema<IUserDocument>(
   {
     name: { type: String, required: true },
@@ -22,30 +23,29 @@ const userSchema = new Schema<IUserDocument>(
     gender: { type: String, required: true, enum: ["Male", "Female", "Other"] },
     img: { type: String, default: "https://i.ibb.co/bP8sJzJ/user.png" },
     password: { type: String, required: true, minlength: 6 },
+    role: { type: String, default: "General" },
   },
   { timestamps: true }
 );
 
 // Middleware to hash password before saving
-userSchema.pre("save", async function (next) {
-  const user = this as IUserDocument;
-  user.password = await bcrypt.hash(user.password, Number(envConfig.bcrypt));
+userSchema.pre<IUserDocument>("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, Number(envConfig.bcrypt));
+  }
   next();
 });
 
 // Static method to check if user exists
-userSchema.statics.isUserExist = async function (
-  this: any,
-  email: string
-): Promise<Pick<IUserDocument, "name" | "img" | "password" | "email"> | null> {
-  return this.findOne({ email: email }).select("name img password email");
+userSchema.statics.isUserExist = function (email: string) {
+  return this.findOne({ email }).select("name img password email _id role");
 };
 
 // Static method to compare passwords
 userSchema.statics.isPasswordMatched = async function (
   givenPassword: string,
   savedPassword: string
-): Promise<boolean> {
+) {
   return await bcrypt.compare(givenPassword, savedPassword);
 };
 
